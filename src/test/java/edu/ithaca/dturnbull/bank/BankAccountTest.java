@@ -2,6 +2,7 @@ package edu.ithaca.dturnbull.bank;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static edu.ithaca.dturnbull.bank.BankAccount.*;
 
 
 class BankAccountTest {
@@ -24,10 +25,45 @@ class BankAccountTest {
 
     @Test
     void isEmailValidTest(){
-        assertTrue(BankAccount.isEmailValid( "a@b.com"));   // valid email address
-        assertFalse( BankAccount.isEmailValid(""));         // empty string
+        assertTrue(isEmailValid( "a@b.com"));   // valid email address
+        assertFalse(isEmailValid(""));         // empty string
 
-        
+//      ============================
+//      "local-part" validation
+//      ============================
+
+        // Allowed chars
+        assertFalse(isEmailValid("anemail🧊@gmail.com"));
+        assertTrue(isEmailValid("a0123456789qwertyuiopasdfghjklzxcvbnm@gmail.com"));
+
+        // Periods as separators (dot-atom specification)
+        assertFalse(isEmailValid(".anemail.@gmail.com"));
+        assertFalse(isEmailValid("an..email@gmail.com"));
+        assertTrue(isEmailValid("samuel.elliot.knight@gmail.com"));
+
+        // Quoted string type
+        assertFalse(isEmailValid("\"Samuel \\Knight\"@gmail.com"));
+        assertFalse(isEmailValid("\"Samuel \"Knight\"@gmail.com"));
+        assertTrue(isEmailValid("\"Samuel Knight\"@gmail.com"));
+        assertTrue(isEmailValid("\"Samuel \\\"Sam\\\" Knight\"@gmail.com"));
+
+//      ============================
+//      "domain" validation
+//      ============================
+
+        // Number of tlds
+        assertTrue(isEmailValid("anemail@mail.amazon.co.uk"));
+        assertTrue(isEmailValid("anemail@mail.google.com"));
+        assertTrue(isEmailValid("anemail@gmail.com"));
+
+        // Periods as separators (dot-atom specification)
+        assertFalse(isEmailValid("anemail@.gmail.com"));
+        assertFalse(isEmailValid("anemail@gmail..com"));
+        assertTrue(isEmailValid("anemail@gmail.com"));
+
+        // Valid chars
+        assertFalse(isEmailValid("anemail@gm⚾️ail.com"));
+        assertTrue(isEmailValid("anemail@12.13.14.net"));
     }
 
     @Test
