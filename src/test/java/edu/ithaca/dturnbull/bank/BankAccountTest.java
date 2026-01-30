@@ -33,13 +33,13 @@ class BankAccountTest {
 //      ============================
 
         // Allowed chars
-        assertFalse(isEmailValid("anemail🧊@gmail.com"));
-        assertTrue(isEmailValid("a0123456789qwertyuiopasdfghjklzxcvbnm@gmail.com"));
+        assertFalse(isEmailValid("anemail🧊@gmail.com")); //EC: Local part contains invalid characters
+        assertTrue(isEmailValid("a0123456789qwertyuiopasdfghjklzxcvbnm@gmail.com")); //EC: Local part contains noinvalid characters
 
         // Periods as separators (dot-atom specification)
-        assertFalse(isEmailValid(".anemail.@gmail.com"));
-        assertFalse(isEmailValid("an..email@gmail.com"));
-        assertTrue(isEmailValid("samuel.elliot.knight@gmail.com"));
+        assertFalse(isEmailValid(".anemail.@gmail.com")); //EC: Local part starts or ends with a period - border case
+        assertFalse(isEmailValid("an..email@gmail.com")); //EC: Local part contains consecutive periods - border case
+        assertTrue(isEmailValid("samuel.elliot.knight@gmail.com")); //EC: Local part contains periods as separators 
 
 /* Really tricky cases - skip for now
 
@@ -55,18 +55,20 @@ class BankAccountTest {
 //      ============================
 
         // Number of tlds
-        assertTrue(isEmailValid("anemail@mail.amazon.co.uk"));
-        assertTrue(isEmailValid("anemail@mail.google.com"));
-        assertTrue(isEmailValid("anemail@gmail.com"));
+        assertTrue(isEmailValid("anemail@mail.amazon.co.uk")); //EC: Domain contains multiple subdomains
+        assertTrue(isEmailValid("anemail@mail.google.com")); //EC: Domain contains single subdomain
+        assertTrue(isEmailValid("anemail@gmail.com")); //EC: Domain contains no subdomains
 
         // Periods as separators (dot-atom specification)
-        assertFalse(isEmailValid("anemail@.gmail.com"));
-        assertFalse(isEmailValid("anemail@gmail..com"));
-        assertTrue(isEmailValid("anemail@gmail.com"));
+        assertFalse(isEmailValid("anemail@.gmail.com")); //EC: Domain starts with a period - border case
+        assertFalse(isEmailValid("anemail@gmail..com")); //EC: Domain contains consecutive periods - border case
+        assertTrue(isEmailValid("anemail@gmail.com")); //EC: Domain contains periods as separators
 
         // Valid chars
-        assertFalse(isEmailValid("anemail@gm⚾️ail.com"));
-        assertTrue(isEmailValid("anemail@12.13.14.net"));
+        assertFalse(isEmailValid("anemail@gm⚾️ail.com")); //EC: Domain contains invalid characters
+        assertTrue(isEmailValid("anemail@12.13.14.net")); //EC: Domain contains no invalid characters
+
+        //Could have ECs for whether domains and local parts are missing, and if they are present
     }
 
     @Test
