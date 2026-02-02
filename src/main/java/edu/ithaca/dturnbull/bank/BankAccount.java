@@ -2,7 +2,7 @@ package edu.ithaca.dturnbull.bank;
 
 public class BankAccount {
 
-    private String email;
+    private final String email;
     private double balance;
 
     /**
@@ -18,6 +18,9 @@ public class BankAccount {
         }
     }
 
+    /**
+     * @return The user's current bank account balance
+     */
     public double getBalance(){
         return balance;
     }
@@ -27,6 +30,7 @@ public class BankAccount {
     }
 
     /**
+     * Withdraw some money from an account, usually for a purchase.
      * @post reduces the balance by amount if amount is non-negative and smaller than balance
      */
     public void withdraw (double amount) throws InsufficientFundsException{

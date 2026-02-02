@@ -8,19 +8,25 @@ import static edu.ithaca.dturnbull.bank.BankAccount.*;
 class BankAccountTest {
 
     @Test
-    void getBalanceTest() {
+    void withdrawAndBalanceTest() throws InsufficientFundsException{
         BankAccount bankAccount = new BankAccount("a@b.com", 200);
 
+        // EC: Withdrawal succeeds
         assertEquals(200, bankAccount.getBalance(), 0.001);
-    }
+        bankAccount.withdraw(100);
+        assertEquals(100, bankAccount.getBalance(), 0.001);
 
-    @Test
-    void withdrawTest() throws InsufficientFundsException{
-        BankAccount bankAccount = new BankAccount("a@b.com", 200);
+        // EC: Withdrawal is too large
+        assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(300));
+        // EC: Withdrawal is negative
+        assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(-300));
+
+        // Boundary case, withdrawal is zero
+        bankAccount.withdraw(0);
+        // Boundary case, withdrawal is exactly correct
         bankAccount.withdraw(100);
 
-        assertEquals(100, bankAccount.getBalance(), 0.001);
-        assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(300));
+        assertEquals(0, bankAccount.getBalance(), 0.001);
     }
 
     @Test
