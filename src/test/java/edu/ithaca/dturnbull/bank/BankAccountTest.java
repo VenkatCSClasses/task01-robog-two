@@ -16,9 +16,8 @@ class BankAccountTest {
         bankAccount.withdraw(100);
         assertEquals(100, bankAccount.getBalance(), 0.001);
 
-        // EC: Withdrawal is too large
+        // EC: Withdrawal amount is invalid, bordered by too large and too small
         assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(300));
-        // EC: Withdrawal is negative
         assertThrows(InsufficientFundsException.class, () -> bankAccount.withdraw(-300));
 
         // Boundary case, withdrawal is zero
