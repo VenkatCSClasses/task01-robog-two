@@ -34,41 +34,41 @@ class BankAccountTest {
 
         // Allowed chars
         assertFalse(isEmailValid("anemail🧊@gmail.com")); //EC: Local part contains invalid characters
-        assertTrue(isEmailValid("a0123456789qwertyuiopasdfghjklzxcvbnm@gmail.com")); //EC: Local part contains noinvalid characters
+        assertTrue(isEmailValid("0123456789qwertyuiopasdfghjklzxcvbnm@gmail.com")); //EC: Local part contains only valid characters
 
         // Periods as separators (dot-atom specification)
-        assertFalse(isEmailValid(".anemail.@gmail.com")); //EC: Local part starts or ends with a period - border case
-        assertFalse(isEmailValid("an..email@gmail.com")); //EC: Local part contains consecutive periods - border case
-        assertTrue(isEmailValid("samuel.elliot.knight@gmail.com")); //EC: Local part contains periods as separators 
+        assertFalse(isEmailValid(".anemail@gmail.com")); //EC: Border, local part starts with a period
+        assertFalse(isEmailValid("anemail.@gmail.com")); //EC: Border, local part ends with a period
+        assertFalse(isEmailValid("an..email@gmail.com")); //EC: Border, local part contains consecutive periods
+        assertTrue(isEmailValid("samuel.elliot.knight@gmail.com")); //EC: Valid, local part contains periods as separators
 
-/* Really tricky cases - skip for now
 
-       // Quoted string type
-        assertFalse(isEmailValid("\"Samuel \\Knight\"@gmail.com"));
-        assertFalse(isEmailValid("\"Samuel \"Knight\"@gmail.com"));
-        assertTrue(isEmailValid("\"Samuel Knight\"@gmail.com"));
-        assertTrue(isEmailValid("\"Samuel \\\"Sam\\\" Knight\"@gmail.com"));
-*/
+        // Quoted string type
+        assertFalse(isEmailValid("\"Samuel \\Kni\"ght\"@gmail.com")); // EC: Invalid case, string contains an unescaped backslash or quote
+        assertTrue(isEmailValid("\"Samuel Knight\"@gmail.com")); // EC: Valid case, no special characters in string
+        assertTrue(isEmailValid("\"Samuel \\\"Sam\\\" \\\\Knight\"@gmail.com")); // EC: Border case, string contains escaped quotes/backslashes
+
 
 //      ============================
 //      "domain" validation
 //      ============================
 
         // Number of tlds
-        assertTrue(isEmailValid("anemail@mail.amazon.co.uk")); //EC: Domain contains multiple subdomains
-        assertTrue(isEmailValid("anemail@mail.google.com")); //EC: Domain contains single subdomain
-        assertTrue(isEmailValid("anemail@gmail.com")); //EC: Domain contains no subdomains
+        assertTrue(isEmailValid("anemail@mail.google.com")); //EC: Domain contains many parts (border of the valid case)
+        assertTrue(isEmailValid("anemail@localhost")); //EC: Domain contains a single (border of the valid case)
 
         // Periods as separators (dot-atom specification)
         assertFalse(isEmailValid("anemail@.gmail.com")); //EC: Domain starts with a period - border case
+        assertFalse(isEmailValid("anemail@gmail.com.")); //EC: Domain ends with a period - border case
         assertFalse(isEmailValid("anemail@gmail..com")); //EC: Domain contains consecutive periods - border case
-        assertTrue(isEmailValid("anemail@gmail.com")); //EC: Domain contains periods as separators
+        assertTrue(isEmailValid("anemail@gmail.com")); //EC: Domain contains periods as separators - valid case
 
         // Valid chars
         assertFalse(isEmailValid("anemail@gm⚾️ail.com")); //EC: Domain contains invalid characters
         assertTrue(isEmailValid("anemail@12.13.14.net")); //EC: Domain contains no invalid characters
 
-        //Could have ECs for whether domains and local parts are missing, and if they are present
+        assertFalse(isEmailValid("anemail@")); // Missing a domain entirely
+        assertFalse(isEmailValid("@google.com")); // Only containing a domain
     }
 
     @Test
