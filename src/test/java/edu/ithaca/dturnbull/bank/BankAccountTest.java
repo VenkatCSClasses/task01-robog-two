@@ -6,9 +6,8 @@ import static edu.ithaca.dturnbull.bank.BankAccount.*;
 
 
 class BankAccountTest {
-
     @Test
-    void withdrawAndBalanceTest() throws InsufficientFundsException{
+    void withdrawAndBalanceTest() throws InsufficientFundsException {
         BankAccount bankAccount = new BankAccount("a@b.com", 200);
 
         // EC: Withdrawal succeeds
@@ -29,8 +28,8 @@ class BankAccountTest {
     }
 
     @Test
-    void isEmailValidTest(){
-        assertTrue(isEmailValid( "a@b.com"));   // valid email address
+    void isEmailValidTest() {
+        assertTrue(isEmailValid("a@b.com"));   // valid email address
         assertFalse(isEmailValid(""));         // empty string
 
 //      ============================
@@ -85,5 +84,4 @@ class BankAccountTest {
         //check for exception thrown correctly
         assertThrows(IllegalArgumentException.class, ()-> new BankAccount("", 100));
     }
-
 }
